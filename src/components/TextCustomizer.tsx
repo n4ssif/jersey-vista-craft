@@ -15,12 +15,24 @@ export const TextCustomizer: React.FC<TextCustomizerProps> = ({ config, updateCo
   const fontOptions = [
     'Arial',
     'Helvetica',
+    'Arial Black',
+    'Impact',
     'Times New Roman',
     'Georgia',
     'Verdana',
     'Trebuchet MS',
-    'Impact',
-    'Arial Black',
+    'Comic Sans MS',
+    'Courier New',
+    'Lucida Console',
+    'Tahoma',
+    'Palatino',
+    'Garamond',
+    'Bookman',
+    'Avant Garde',
+    'Century Gothic',
+    'Franklin Gothic Medium',
+    'Copperplate',
+    'Optima'
   ];
 
   return (
@@ -93,7 +105,7 @@ export const TextCustomizer: React.FC<TextCustomizerProps> = ({ config, updateCo
           <Slider
             id="font-size"
             min={16}
-            max={36}
+            max={48}
             step={1}
             value={[config.fontSize]}
             onValueChange={(value) => updateConfig({ fontSize: value[0] })}
