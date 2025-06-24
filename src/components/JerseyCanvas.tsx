@@ -12,6 +12,8 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
   const fabricCanvasRef = useRef<FabricCanvas | null>(null);
 
   useEffect(() => {
+    console.log('JerseyCanvas config updated:', config);
+    
     if (!canvasRef.current) return;
 
     const canvas = new FabricCanvas(canvasRef.current, {
@@ -24,6 +26,14 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
 
     // Create the jersey shape using rectangles and paths
     const createJersey = async () => {
+      console.log('Creating jersey with config:', {
+        teamName: config.teamName,
+        playerName: config.playerName,
+        playerNumber: config.playerNumber,
+        font: config.font,
+        fontSize: config.fontSize
+      });
+
       // Main body
       const body = new Rect({
         left: 50,
@@ -81,6 +91,8 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         evented: false,
       });
 
+      console.log('Team name text object:', teamName.text);
+
       // Add shadow and stroke effects for gradient text
       if (config.secondaryColor.includes('gradient')) {
         teamName.set({
@@ -109,6 +121,8 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         evented: false,
       });
 
+      console.log('Player number text object:', playerNumber.text);
+
       // Add enhanced shadow and stroke effect for gradient numbers
       if (config.accentColor.includes('gradient')) {
         playerNumber.set({
@@ -136,6 +150,8 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         selectable: false,
         evented: false,
       });
+
+      console.log('Player name text object:', playerName.text);
 
       // Add shadow effect for gradient player name
       if (config.secondaryColor.includes('gradient')) {
@@ -173,6 +189,7 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         }
       }
 
+      console.log('Canvas objects after adding:', canvas.getObjects().length);
       canvas.renderAll();
     };
 
@@ -181,7 +198,7 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
     return () => {
       canvas.dispose();
     };
-  }, [config]);
+  }, [config.primaryColor, config.secondaryColor, config.accentColor, config.teamName, config.playerName, config.playerNumber, config.font, config.fontSize, config.shieldUrl, config.shieldSize, config.shieldPosition.x, config.shieldPosition.y]);
 
   return (
     <div className="flex justify-center">
