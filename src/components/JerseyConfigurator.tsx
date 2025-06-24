@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { JerseyCanvas } from './JerseyCanvas';
 import { ColorPicker } from './ColorPicker';
 import { TextCustomizer } from './TextCustomizer';
+import { ShieldUpload } from './ShieldUpload';
 import { ExportPanel } from './ExportPanel';
 import { Card } from './ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
@@ -16,6 +17,9 @@ export interface JerseyConfig {
   teamName: string;
   font: string;
   fontSize: number;
+  shieldUrl: string | null;
+  shieldSize: number;
+  shieldPosition: { x: number; y: number };
 }
 
 export const JerseyConfigurator: React.FC = () => {
@@ -27,7 +31,10 @@ export const JerseyConfigurator: React.FC = () => {
     playerNumber: '10',
     teamName: 'TEAM',
     font: 'Arial',
-    fontSize: 24
+    fontSize: 24,
+    shieldUrl: null,
+    shieldSize: 60,
+    shieldPosition: { x: 120, y: 200 }
   });
 
   const updateConfig = (updates: Partial<JerseyConfig>) => {
@@ -48,9 +55,10 @@ export const JerseyConfigurator: React.FC = () => {
       <div className="space-y-6">
         <Card className="p-6">
           <Tabs defaultValue="colors" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="colors">Colors</TabsTrigger>
               <TabsTrigger value="text">Text</TabsTrigger>
+              <TabsTrigger value="shield">Shield</TabsTrigger>
               <TabsTrigger value="export">Export</TabsTrigger>
             </TabsList>
             
@@ -60,6 +68,10 @@ export const JerseyConfigurator: React.FC = () => {
             
             <TabsContent value="text" className="mt-4">
               <TextCustomizer config={config} updateConfig={updateConfig} />
+            </TabsContent>
+            
+            <TabsContent value="shield" className="mt-4">
+              <ShieldUpload config={config} updateConfig={updateConfig} />
             </TabsContent>
             
             <TabsContent value="export" className="mt-4">

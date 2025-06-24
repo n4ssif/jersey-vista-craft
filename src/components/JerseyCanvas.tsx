@@ -1,6 +1,6 @@
 
 import React, { useRef, useEffect } from 'react';
-import { Canvas as FabricCanvas, Rect, Text, Group } from 'fabric';
+import { Canvas as FabricCanvas, Rect, Text, FabricImage } from 'fabric';
 import { JerseyConfig } from './JerseyConfigurator';
 
 interface JerseyCanvasProps {
@@ -23,7 +23,7 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
     fabricCanvasRef.current = canvas;
 
     // Create the jersey shape using rectangles and paths
-    const createJersey = () => {
+    const createJersey = async () => {
       // Main body
       const body = new Rect({
         left: 50,
@@ -107,9 +107,28 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         evented: false,
       });
 
-      // Clear canvas and add all elements
+      // Clear canvas and add basic elements
       canvas.clear();
       canvas.add(body, leftSleeve, rightSleeve, collar, teamName, playerNumber, playerName);
+
+      // Add shield if available
+      if (config.shieldUrl) {
+        try {
+          const img = await FabricImage.fromURL(config.shieldUrl);
+          img.set({
+            left: config.shieldPosition.x,
+            top: config.shieldPosition.y,
+            scaleX: config.shieldSize / 100,
+            scaleY: config.shieldSize / 100,
+            selectable: false,
+            evented: false,
+          });
+          canvas.add(img);
+        } catch (error) {
+          console.error('Error loading shield image:', error);
+        }
+      }
+
       canvas.renderAll();
     };
 
