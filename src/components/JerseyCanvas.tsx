@@ -11,56 +11,6 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fabricCanvasRef = useRef<FabricCanvas | null>(null);
 
-  // Helper function to create gradient or solid color
-  const createFillPattern = (canvas: FabricCanvas, color: string, width: number, height: number) => {
-    if (color.startsWith('linear-gradient')) {
-      // Parse the gradient string to create a Fabric.js gradient
-      const gradientCanvas = document.createElement('canvas');
-      gradientCanvas.width = width;
-      gradientCanvas.height = height;
-      const ctx = gradientCanvas.getContext('2d');
-      
-      if (ctx) {
-        // Create a temporary div to apply the gradient and extract colors
-        const tempDiv = document.createElement('div');
-        tempDiv.style.background = color;
-        tempDiv.style.width = '100px';
-        tempDiv.style.height = '100px';
-        document.body.appendChild(tempDiv);
-        
-        // For gradients, we'll create a pattern that mimics the effect
-        const gradient = ctx.createLinearGradient(0, 0, width, height);
-        
-        // Gold gradient approximation
-        if (color.includes('FFD700') || color.includes('gold')) {
-          gradient.addColorStop(0, '#FFD700');
-          gradient.addColorStop(0.25, '#FFA500');
-          gradient.addColorStop(0.5, '#FFD700');
-          gradient.addColorStop(0.75, '#B8860B');
-          gradient.addColorStop(1, '#FFD700');
-        } else if (color.includes('C0C0C0') || color.includes('silver')) {
-          gradient.addColorStop(0, '#C0C0C0');
-          gradient.addColorStop(0.25, '#808080');
-          gradient.addColorStop(0.5, '#C0C0C0');
-          gradient.addColorStop(0.75, '#696969');
-          gradient.addColorStop(1, '#C0C0C0');
-        } else {
-          // Default gradient
-          gradient.addColorStop(0, '#1e40af');
-          gradient.addColorStop(1, '#3b82f6');
-        }
-        
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, width, height);
-        
-        document.body.removeChild(tempDiv);
-        
-        return gradientCanvas.toDataURL();
-      }
-    }
-    return color;
-  };
-
   useEffect(() => {
     if (!canvasRef.current) return;
 
@@ -74,15 +24,13 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
 
     // Create the jersey shape using rectangles and paths
     const createJersey = async () => {
-      const primaryFill = createFillPattern(canvas, config.primaryColor, 300, 350);
-
       // Main body
       const body = new Rect({
         left: 50,
         top: 100,
         width: 300,
         height: 350,
-        fill: config.primaryColor.includes('gradient') ? '#1e40af' : config.primaryColor,
+        fill: config.primaryColor,
         selectable: false,
         evented: false,
       });
@@ -93,7 +41,7 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         top: 120,
         width: 60,
         height: 150,
-        fill: config.primaryColor.includes('gradient') ? '#1e40af' : config.primaryColor,
+        fill: config.primaryColor,
         selectable: false,
         evented: false,
       });
@@ -103,7 +51,7 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         top: 120,
         width: 60,
         height: 150,
-        fill: config.primaryColor.includes('gradient') ? '#1e40af' : config.primaryColor,
+        fill: config.primaryColor,
         selectable: false,
         evented: false,
       });
@@ -128,9 +76,24 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         fill: config.secondaryColor.includes('gradient') ? '#ffffff' : config.secondaryColor,
         textAlign: 'center',
         originX: 'center',
+        fontWeight: 'bold',
         selectable: false,
         evented: false,
       });
+
+      // Add shadow and stroke effects for gradient text
+      if (config.secondaryColor.includes('gradient')) {
+        teamName.set({
+          shadow: {
+            color: 'rgba(0,0,0,0.4)',
+            blur: 2,
+            offsetX: 1,
+            offsetY: 1
+          },
+          stroke: '#000000',
+          strokeWidth: 1
+        });
+      }
 
       // Player number (large) - with potential gradient effect
       const playerNumber = new Text(config.playerNumber, {
@@ -146,15 +109,17 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         evented: false,
       });
 
-      // Add shadow effect for gradient colors
+      // Add enhanced shadow and stroke effect for gradient numbers
       if (config.accentColor.includes('gradient')) {
         playerNumber.set({
           shadow: {
-            color: 'rgba(0,0,0,0.3)',
-            blur: 3,
+            color: 'rgba(0,0,0,0.5)',
+            blur: 4,
             offsetX: 2,
             offsetY: 2
-          }
+          },
+          stroke: '#000000',
+          strokeWidth: 2
         });
       }
 
@@ -167,9 +132,24 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         fill: config.secondaryColor.includes('gradient') ? '#ffffff' : config.secondaryColor,
         textAlign: 'center',
         originX: 'center',
+        fontWeight: 'bold',
         selectable: false,
         evented: false,
       });
+
+      // Add shadow effect for gradient player name
+      if (config.secondaryColor.includes('gradient')) {
+        playerName.set({
+          shadow: {
+            color: 'rgba(0,0,0,0.4)',
+            blur: 2,
+            offsetX: 1,
+            offsetY: 1
+          },
+          stroke: '#000000',
+          strokeWidth: 1
+        });
+      }
 
       // Clear canvas and add basic elements
       canvas.clear();
