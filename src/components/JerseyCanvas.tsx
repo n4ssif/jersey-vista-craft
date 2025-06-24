@@ -75,7 +75,6 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
     // Create the jersey shape using rectangles and paths
     const createJersey = async () => {
       const primaryFill = createFillPattern(canvas, config.primaryColor, 300, 350);
-      const accentFill = createFillPattern(canvas, config.accentColor, 100, 100);
 
       // Main body
       const body = new Rect({
@@ -83,30 +82,10 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         top: 100,
         width: 300,
         height: 350,
-        fill: typeof primaryFill === 'string' && primaryFill.startsWith('data:') ? 
-          new FabricImage.prototype.constructor.fromURL(primaryFill).then((img: any) => {
-            const pattern = new (canvas as any).Pattern({
-              source: img.getElement(),
-              repeat: 'no-repeat'
-            });
-            return pattern;
-          }) : primaryFill,
+        fill: config.primaryColor.includes('gradient') ? '#1e40af' : config.primaryColor,
         selectable: false,
         evented: false,
       });
-
-      // If it's a gradient pattern, handle it differently
-      if (typeof primaryFill === 'string' && primaryFill.startsWith('data:')) {
-        try {
-          const patternImg = await FabricImage.fromURL(primaryFill);
-          body.set('fill', new (fabric as any).Pattern({
-            source: patternImg.getElement(),
-            repeat: 'no-repeat'
-          }));
-        } catch (error) {
-          body.set('fill', config.primaryColor.includes('gradient') ? '#1e40af' : config.primaryColor);
-        }
-      }
 
       // Sleeves
       const leftSleeve = new Rect({
