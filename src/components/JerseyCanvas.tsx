@@ -1,13 +1,14 @@
-
 import React, { useRef, useEffect } from 'react';
 import { Canvas as FabricCanvas, Rect, Text, FabricImage } from 'fabric';
-import { JerseyConfig } from './JerseyConfigurator';
+import { JerseyConfig, JerseyPart } from './JerseyConfigurator';
 
 interface JerseyCanvasProps {
   config: JerseyConfig;
+  onPartClick?: (part: JerseyPart) => void;
+  selectedPart?: JerseyPart | null;
 }
 
-export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
+export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config, onPartClick, selectedPart }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fabricCanvasRef = useRef<FabricCanvas | null>(null);
 
@@ -26,7 +27,7 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
 
     // Create the jersey shape using rectangles and paths
     const createJersey = async () => {
-      console.log('Creating jersey with individual part colors');
+      console.log('Creating interactive jersey with individual part colors');
 
       // Main torso body
       const torso = new Rect({
@@ -36,8 +37,12 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         height: 350,
         fill: config.torsoColor,
         selectable: false,
-        evented: false,
+        evented: true,
+        hoverCursor: 'pointer',
+        stroke: selectedPart === 'torso' ? '#3b82f6' : 'transparent',
+        strokeWidth: selectedPart === 'torso' ? 3 : 0,
       });
+      torso.set('jerseyPart', 'torso');
 
       // Torso side trims
       const leftTorsoTrim = new Rect({
@@ -47,8 +52,12 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         height: 350,
         fill: config.torsoTrimColor,
         selectable: false,
-        evented: false,
+        evented: true,
+        hoverCursor: 'pointer',
+        stroke: selectedPart === 'torsoTrim' ? '#3b82f6' : 'transparent',
+        strokeWidth: selectedPart === 'torsoTrim' ? 3 : 0,
       });
+      leftTorsoTrim.set('jerseyPart', 'torsoTrim');
 
       const rightTorsoTrim = new Rect({
         left: 330,
@@ -57,8 +66,12 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         height: 350,
         fill: config.torsoTrimColor,
         selectable: false,
-        evented: false,
+        evented: true,
+        hoverCursor: 'pointer',
+        stroke: selectedPart === 'torsoTrim' ? '#3b82f6' : 'transparent',
+        strokeWidth: selectedPart === 'torsoTrim' ? 3 : 0,
       });
+      rightTorsoTrim.set('jerseyPart', 'torsoTrim');
 
       // Main sleeves
       const leftSleeve = new Rect({
@@ -68,8 +81,12 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         height: 120,
         fill: config.sleeveColor,
         selectable: false,
-        evented: false,
+        evented: true,
+        hoverCursor: 'pointer',
+        stroke: selectedPart === 'sleeve' ? '#3b82f6' : 'transparent',
+        strokeWidth: selectedPart === 'sleeve' ? 3 : 0,
       });
+      leftSleeve.set('jerseyPart', 'sleeve');
 
       const rightSleeve = new Rect({
         left: 330,
@@ -78,8 +95,12 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         height: 120,
         fill: config.sleeveColor,
         selectable: false,
-        evented: false,
+        evented: true,
+        hoverCursor: 'pointer',
+        stroke: selectedPart === 'sleeve' ? '#3b82f6' : 'transparent',
+        strokeWidth: selectedPart === 'sleeve' ? 3 : 0,
       });
+      rightSleeve.set('jerseyPart', 'sleeve');
 
       // Sleeve end trims
       const leftSleeveTrim = new Rect({
@@ -89,8 +110,12 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         height: 20,
         fill: config.sleeveTrimColor,
         selectable: false,
-        evented: false,
+        evented: true,
+        hoverCursor: 'pointer',
+        stroke: selectedPart === 'sleeveTrim' ? '#3b82f6' : 'transparent',
+        strokeWidth: selectedPart === 'sleeveTrim' ? 3 : 0,
       });
+      leftSleeveTrim.set('jerseyPart', 'sleeveTrim');
 
       const rightSleeveTrim = new Rect({
         left: 330,
@@ -99,8 +124,12 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         height: 20,
         fill: config.sleeveTrimColor,
         selectable: false,
-        evented: false,
+        evented: true,
+        hoverCursor: 'pointer',
+        stroke: selectedPart === 'sleeveTrim' ? '#3b82f6' : 'transparent',
+        strokeWidth: selectedPart === 'sleeveTrim' ? 3 : 0,
       });
+      rightSleeveTrim.set('jerseyPart', 'sleeveTrim');
 
       // Collar/Neck
       const collar = new Rect({
@@ -110,7 +139,21 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         height: 40,
         fill: config.neckColor,
         selectable: false,
-        evented: false,
+        evented: true,
+        hoverCursor: 'pointer',
+        stroke: selectedPart === 'neck' ? '#3b82f6' : 'transparent',
+        strokeWidth: selectedPart === 'neck' ? 3 : 0,
+      });
+      collar.set('jerseyPart', 'neck');
+
+      // Add click event listeners to all jersey parts
+      const jerseyParts = [torso, leftTorsoTrim, rightTorsoTrim, leftSleeve, rightSleeve, leftSleeveTrim, rightSleeveTrim, collar];
+      jerseyParts.forEach(part => {
+        part.on('mousedown', () => {
+          const jerseyPart = part.get('jerseyPart') as JerseyPart;
+          console.log('Clicked jersey part:', jerseyPart);
+          onPartClick?.(jerseyPart);
+        });
       });
 
       // Team name
@@ -262,7 +305,9 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
     config.shieldUrl, 
     config.shieldSize, 
     config.shieldPosition.x, 
-    config.shieldPosition.y
+    config.shieldPosition.y,
+    selectedPart,
+    onPartClick
   ]);
 
   return (

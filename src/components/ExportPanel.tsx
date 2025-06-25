@@ -52,7 +52,7 @@ export const ExportPanel: React.FC<ExportPanelProps> = ({ config }) => {
       pdf.text(`Team: ${config.teamName}`, 20, 210);
       pdf.text(`Player: ${config.playerName}`, 20, 220);
       pdf.text(`Number: ${config.playerNumber}`, 20, 230);
-      pdf.text(`Colors: ${config.primaryColor}, ${config.secondaryColor}, ${config.accentColor}`, 20, 240);
+      pdf.text(`Colors: ${config.torsoColor}, ${config.secondaryColor}, ${config.accentColor}`, 20, 240);
 
       // Save PDF
       pdf.save(`jersey-${config.teamName}-${config.playerName}.pdf`);

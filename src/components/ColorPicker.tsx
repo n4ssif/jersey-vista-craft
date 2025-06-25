@@ -1,14 +1,16 @@
 
 import React from 'react';
-import { JerseyConfig } from './JerseyConfigurator';
+import { JerseyConfig, JerseyPart } from './JerseyConfigurator';
 import { Label } from './ui/label';
 
 interface ColorPickerProps {
   config: JerseyConfig;
   updateConfig: (updates: Partial<JerseyConfig>) => void;
+  selectedPart?: JerseyPart | null;
+  onPartSelect?: (part: JerseyPart) => void;
 }
 
-export const ColorPicker: React.FC<ColorPickerProps> = ({ config, updateConfig }) => {
+export const ColorPicker: React.FC<ColorPickerProps> = ({ config, updateConfig, selectedPart, onPartSelect }) => {
   const colorPresets = [
     { 
       name: 'Blue & White', 
@@ -60,9 +62,58 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({ config, updateConfig }
     },
   ];
 
+  const partLabels = {
+    torso: 'Torso Color',
+    torsoTrim: 'Torso Side Trim Color',
+    sleeve: 'Sleeve Color',
+    sleeveTrim: 'Sleeve End Trim Color',
+    neck: 'Neck/Collar Color'
+  };
+
+  const getColorForPart = (part: JerseyPart): string => {
+    const colorMap = {
+      torso: config.torsoColor,
+      torsoTrim: config.torsoTrimColor,
+      sleeve: config.sleeveColor,
+      sleeveTrim: config.sleeveTrimColor,
+      neck: config.neckColor
+    };
+    return colorMap[part];
+  };
+
+  const updatePartColor = (part: JerseyPart, color: string) => {
+    const colorMap = {
+      torso: 'torsoColor',
+      torsoTrim: 'torsoTrimColor',
+      sleeve: 'sleeveColor',
+      sleeveTrim: 'sleeveTrimColor',
+      neck: 'neckColor'
+    };
+    updateConfig({ [colorMap[part]]: color });
+  };
+
   return (
     <div className="space-y-6">
       <h3 className="text-lg font-semibold">Jersey Colors</h3>
+      
+      {selectedPart && (
+        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <h4 className="text-sm font-medium text-blue-800 mb-2">
+            Selected: {partLabels[selectedPart]}
+          </h4>
+          <div className="flex items-center space-x-2">
+            <input
+              type="color"
+              value={getColorForPart(selectedPart)}
+              onChange={(e) => updatePartColor(selectedPart, e.target.value)}
+              className="w-12 h-8 rounded border border-gray-300"
+            />
+            <span className="text-sm text-gray-600">
+              {getColorForPart(selectedPart)}
+            </span>
+          </div>
+        </div>
+      )}
       
       {/* Color Presets */}
       <div>
@@ -115,95 +166,32 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({ config, updateConfig }
 
       {/* Individual Color Controls */}
       <div className="space-y-4">
-        <div>
-          <Label htmlFor="torso-color" className="text-sm font-medium mb-2 block">
-            Torso Color
-          </Label>
-          <div className="flex items-center space-x-2">
-            <input
-              id="torso-color"
-              type="color"
-              value={config.torsoColor}
-              onChange={(e) => updateConfig({ torsoColor: e.target.value })}
-              className="w-12 h-8 rounded border border-gray-300"
-            />
-            <span className="text-sm text-gray-600">
-              {config.torsoColor}
-            </span>
+        <Label className="text-sm font-medium">Individual Part Selection</Label>
+        {(Object.keys(partLabels) as JerseyPart[]).map((part) => (
+          <div key={part}>
+            <button
+              onClick={() => onPartSelect?.(part)}
+              className={`w-full p-3 text-left border rounded-lg transition-colors ${
+                selectedPart === part 
+                  ? 'border-blue-500 bg-blue-50' 
+                  : 'border-gray-200 hover:border-gray-300'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">{partLabels[part]}</span>
+                <div className="flex items-center space-x-2">
+                  <div
+                    className="w-6 h-6 rounded border border-gray-300"
+                    style={{ backgroundColor: getColorForPart(part) }}
+                  />
+                  <span className="text-xs text-gray-500">
+                    {getColorForPart(part)}
+                  </span>
+                </div>
+              </div>
+            </button>
           </div>
-        </div>
-
-        <div>
-          <Label htmlFor="torso-trim-color" className="text-sm font-medium mb-2 block">
-            Torso Side Trim Color
-          </Label>
-          <div className="flex items-center space-x-2">
-            <input
-              id="torso-trim-color"
-              type="color"
-              value={config.torsoTrimColor}
-              onChange={(e) => updateConfig({ torsoTrimColor: e.target.value })}
-              className="w-12 h-8 rounded border border-gray-300"
-            />
-            <span className="text-sm text-gray-600">
-              {config.torsoTrimColor}
-            </span>
-          </div>
-        </div>
-
-        <div>
-          <Label htmlFor="sleeve-color" className="text-sm font-medium mb-2 block">
-            Sleeve Color
-          </Label>
-          <div className="flex items-center space-x-2">
-            <input
-              id="sleeve-color"
-              type="color"
-              value={config.sleeveColor}
-              onChange={(e) => updateConfig({ sleeveColor: e.target.value })}
-              className="w-12 h-8 rounded border border-gray-300"
-            />
-            <span className="text-sm text-gray-600">
-              {config.sleeveColor}
-            </span>
-          </div>
-        </div>
-
-        <div>
-          <Label htmlFor="sleeve-trim-color" className="text-sm font-medium mb-2 block">
-            Sleeve End Trim Color
-          </Label>
-          <div className="flex items-center space-x-2">
-            <input
-              id="sleeve-trim-color"
-              type="color"
-              value={config.sleeveTrimColor}
-              onChange={(e) => updateConfig({ sleeveTrimColor: e.target.value })}
-              className="w-12 h-8 rounded border border-gray-300"
-            />
-            <span className="text-sm text-gray-600">
-              {config.sleeveTrimColor}
-            </span>
-          </div>
-        </div>
-
-        <div>
-          <Label htmlFor="neck-color" className="text-sm font-medium mb-2 block">
-            Neck/Collar Color
-          </Label>
-          <div className="flex items-center space-x-2">
-            <input
-              id="neck-color"
-              type="color"
-              value={config.neckColor}
-              onChange={(e) => updateConfig({ neckColor: e.target.value })}
-              className="w-12 h-8 rounded border border-gray-300"
-            />
-            <span className="text-sm text-gray-600">
-              {config.neckColor}
-            </span>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );
