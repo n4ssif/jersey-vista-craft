@@ -9,14 +9,25 @@ import { Card } from './ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
 export interface JerseyConfig {
-  primaryColor: string;
+  // Individual part colors
+  torsoColor: string;
+  torsoTrimColor: string;
+  sleeveColor: string;
+  sleeveTrimColor: string;
+  neckColor: string;
+  
+  // Text colors
   secondaryColor: string;
   accentColor: string;
+  
+  // Text content and styling
   playerName: string;
   playerNumber: string;
   teamName: string;
   font: string;
   fontSize: number;
+  
+  // Shield
   shieldUrl: string | null;
   shieldSize: number;
   shieldPosition: { x: number; y: number };
@@ -24,7 +35,11 @@ export interface JerseyConfig {
 
 export const JerseyConfigurator: React.FC = () => {
   const [config, setConfig] = useState<JerseyConfig>({
-    primaryColor: '#1e40af',
+    torsoColor: '#1e40af',
+    torsoTrimColor: '#ffffff',
+    sleeveColor: '#1e40af',
+    sleeveTrimColor: '#ffffff',
+    neckColor: '#ffffff',
     secondaryColor: '#ffffff',
     accentColor: '#fbbf24',
     playerName: 'PLAYER',

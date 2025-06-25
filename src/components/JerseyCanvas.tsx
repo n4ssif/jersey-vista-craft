@@ -26,53 +26,89 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
 
     // Create the jersey shape using rectangles and paths
     const createJersey = async () => {
-      console.log('Creating jersey with config:', {
-        teamName: config.teamName,
-        playerName: config.playerName,
-        playerNumber: config.playerNumber,
-        font: config.font,
-        fontSize: config.fontSize
-      });
+      console.log('Creating jersey with individual part colors');
 
-      // Main body
-      const body = new Rect({
-        left: 50,
+      // Main torso body
+      const torso = new Rect({
+        left: 70,
         top: 100,
-        width: 300,
+        width: 260,
         height: 350,
-        fill: config.primaryColor,
+        fill: config.torsoColor,
         selectable: false,
         evented: false,
       });
 
-      // Sleeves
+      // Torso side trims
+      const leftTorsoTrim = new Rect({
+        left: 50,
+        top: 100,
+        width: 20,
+        height: 350,
+        fill: config.torsoTrimColor,
+        selectable: false,
+        evented: false,
+      });
+
+      const rightTorsoTrim = new Rect({
+        left: 330,
+        top: 100,
+        width: 20,
+        height: 350,
+        fill: config.torsoTrimColor,
+        selectable: false,
+        evented: false,
+      });
+
+      // Main sleeves
       const leftSleeve = new Rect({
         left: 20,
         top: 120,
-        width: 60,
-        height: 150,
-        fill: config.primaryColor,
+        width: 50,
+        height: 120,
+        fill: config.sleeveColor,
         selectable: false,
         evented: false,
       });
 
       const rightSleeve = new Rect({
-        left: 320,
+        left: 330,
         top: 120,
-        width: 60,
-        height: 150,
-        fill: config.primaryColor,
+        width: 50,
+        height: 120,
+        fill: config.sleeveColor,
         selectable: false,
         evented: false,
       });
 
-      // Collar
+      // Sleeve end trims
+      const leftSleeveTrim = new Rect({
+        left: 20,
+        top: 220,
+        width: 50,
+        height: 20,
+        fill: config.sleeveTrimColor,
+        selectable: false,
+        evented: false,
+      });
+
+      const rightSleeveTrim = new Rect({
+        left: 330,
+        top: 220,
+        width: 50,
+        height: 20,
+        fill: config.sleeveTrimColor,
+        selectable: false,
+        evented: false,
+      });
+
+      // Collar/Neck
       const collar = new Rect({
         left: 150,
         top: 80,
         width: 100,
         height: 40,
-        fill: config.secondaryColor.includes('gradient') ? '#ffffff' : config.secondaryColor,
+        fill: config.neckColor,
         selectable: false,
         evented: false,
       });
@@ -167,9 +203,21 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
         });
       }
 
-      // Clear canvas and add basic elements
+      // Clear canvas and add all elements
       canvas.clear();
-      canvas.add(body, leftSleeve, rightSleeve, collar, teamName, playerNumber, playerName);
+      canvas.add(
+        torso, 
+        leftTorsoTrim, 
+        rightTorsoTrim,
+        leftSleeve, 
+        rightSleeve, 
+        leftSleeveTrim,
+        rightSleeveTrim,
+        collar, 
+        teamName, 
+        playerNumber, 
+        playerName
+      );
 
       // Add shield if available
       if (config.shieldUrl) {
@@ -198,7 +246,24 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config }) => {
     return () => {
       canvas.dispose();
     };
-  }, [config.primaryColor, config.secondaryColor, config.accentColor, config.teamName, config.playerName, config.playerNumber, config.font, config.fontSize, config.shieldUrl, config.shieldSize, config.shieldPosition.x, config.shieldPosition.y]);
+  }, [
+    config.torsoColor, 
+    config.torsoTrimColor, 
+    config.sleeveColor, 
+    config.sleeveTrimColor, 
+    config.neckColor,
+    config.secondaryColor, 
+    config.accentColor, 
+    config.teamName, 
+    config.playerName, 
+    config.playerNumber, 
+    config.font, 
+    config.fontSize, 
+    config.shieldUrl, 
+    config.shieldSize, 
+    config.shieldPosition.x, 
+    config.shieldPosition.y
+  ]);
 
   return (
     <div className="flex justify-center">
