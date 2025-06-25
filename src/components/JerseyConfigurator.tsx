@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { JerseyCanvas } from './JerseyCanvas';
+import { DualJerseyCanvas } from './DualJerseyCanvas';
 import { ColorPicker } from './ColorPicker';
 import { TextCustomizer } from './TextCustomizer';
 import { ShieldUpload } from './ShieldUpload';
@@ -90,7 +90,7 @@ export const JerseyConfigurator: React.FC = () => {
           <p className="text-sm text-gray-600 mb-4">
             {selectedPart ? `Click a color below to change the ${selectedPart} color, or click another part` : 'Click on any part of the jersey to customize its color'}
           </p>
-          <JerseyCanvas 
+          <DualJerseyCanvas 
             config={config} 
             onPartClick={handlePartClick}
             selectedPart={selectedPart}
