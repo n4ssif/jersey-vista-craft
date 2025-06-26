@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from 'react';
 import { Canvas as FabricCanvas, Rect, Text, FabricImage } from 'fabric';
 import { JerseyConfig, JerseyPart } from './JerseyConfigurator';
@@ -162,15 +161,27 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
       playerName
     );
 
-    // Add shield if available
+    // Add shield with size normalization
     if (config.shieldUrl) {
       try {
         const img = await FabricImage.fromURL(config.shieldUrl);
+        
+        // Calculate normalized scale - clamp to maximum of 15 pixels
+        const maxSize = 15;
+        const originalWidth = img.width || 100;
+        const originalHeight = img.height || 100;
+        const maxDimension = Math.max(originalWidth, originalHeight);
+        const normalizedScale = Math.min(maxSize / maxDimension, 1);
+        
+        // Apply user's size preference on top of normalized scale
+        const userScale = config.shieldSize / 100;
+        const finalScale = normalizedScale * userScale;
+        
         img.set({
           left: config.shieldPosition.x,
           top: config.shieldPosition.y,
-          scaleX: config.shieldSize / 100,
-          scaleY: config.shieldSize / 100,
+          scaleX: finalScale,
+          scaleY: finalScale,
           selectable: false,
           evented: false,
         });
@@ -270,15 +281,27 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
       playerName
     );
 
-    // Add shield on back if available (positioned differently for back view)
+    // Add shield on back with size normalization
     if (config.shieldUrl) {
       try {
         const img = await FabricImage.fromURL(config.shieldUrl);
+        
+        // Calculate normalized scale - clamp to maximum of 15 pixels
+        const maxSize = 15;
+        const originalWidth = img.width || 100;
+        const originalHeight = img.height || 100;
+        const maxDimension = Math.max(originalWidth, originalHeight);
+        const normalizedScale = Math.min(maxSize / maxDimension, 1);
+        
+        // Apply user's size preference on top of normalized scale
+        const userScale = config.shieldSize / 100;
+        const finalScale = normalizedScale * userScale;
+        
         img.set({
           left: config.shieldPosition.x,
-          top: config.shieldPosition.y + 50, // Slightly lower position for back view
-          scaleX: config.shieldSize / 100,
-          scaleY: config.shieldSize / 100,
+          top: config.shieldPosition.y + 50,
+          scaleX: finalScale,
+          scaleY: finalScale,
           selectable: false,
           evented: false,
         });
