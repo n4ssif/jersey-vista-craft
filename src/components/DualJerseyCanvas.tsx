@@ -46,30 +46,10 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
     return rect;
   };
 
-  const calculateShieldScale = (imageWidth: number, imageHeight: number, maxSize: number, canvasWidth: number, canvasHeight: number) => {
-    // Calculate the maximum allowed dimensions based on canvas size
-    const maxWidth = canvasWidth * 0.25; // Max 25% of canvas width
-    const maxHeight = canvasHeight * 0.2; // Max 20% of canvas height
-    
-    // Calculate scale based on the user's size preference
-    const userScale = maxSize / 100;
-    
-    // Calculate what the actual dimensions would be with user's scale
-    const scaledWidth = imageWidth * userScale;
-    const scaledHeight = imageHeight * userScale;
-    
-    // If the scaled dimensions exceed our maximum allowed dimensions, adjust the scale
-    let finalScale = userScale;
-    
-    if (scaledWidth > maxWidth) {
-      finalScale = Math.min(finalScale, maxWidth / imageWidth);
-    }
-    
-    if (scaledHeight > maxHeight) {
-      finalScale = Math.min(finalScale, maxHeight / imageHeight);
-    }
-    
-    return finalScale;
+  const calculateShieldScale = (imageWidth: number, imageHeight: number, userSize: number) => {
+    // Convert user size (30-120) to a scale factor
+    // User size of 60 should be roughly normal size, so we use it as baseline
+    return userSize / 60;
   };
 
   const constrainShieldPosition = (x: number, y: number, shieldWidth: number, shieldHeight: number, canvasWidth: number, canvasHeight: number) => {
@@ -200,13 +180,11 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
       try {
         const img = await FabricImage.fromURL(config.shieldUrl);
         
-        // Calculate appropriate scale to fit canvas
+        // Calculate scale based on user's size preference
         const scale = calculateShieldScale(
           img.width || 100,
           img.height || 100,
-          config.shieldSize,
-          canvas.width || 400,
-          canvas.height || 500
+          config.shieldSize
         );
         
         // Calculate actual shield dimensions after scaling
@@ -332,13 +310,11 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
       try {
         const img = await FabricImage.fromURL(config.shieldUrl);
         
-        // Calculate appropriate scale to fit canvas
+        // Calculate scale based on user's size preference
         const scale = calculateShieldScale(
           img.width || 100,
           img.height || 100,
-          config.shieldSize,
-          canvas.width || 400,
-          canvas.height || 500
+          config.shieldSize
         );
         
         // Calculate actual shield dimensions after scaling
