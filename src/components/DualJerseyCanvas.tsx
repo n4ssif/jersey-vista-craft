@@ -47,7 +47,7 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
     return rect;
   };
 
-  const createFrontJersey = (canvas: FabricCanvas) => {
+  const createFrontJersey = async (canvas: FabricCanvas) => {
     // Main torso body
     const torso = createJerseyPart(70, 100, 260, 350, config.torsoColor, 'torso', selectedPart === 'torso', canvas);
     
@@ -161,9 +161,29 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
       playerNumber, 
       playerName
     );
+
+    // Add shield if available
+    if (config.shieldUrl) {
+      try {
+        const img = await FabricImage.fromURL(config.shieldUrl);
+        img.set({
+          left: config.shieldPosition.x,
+          top: config.shieldPosition.y,
+          scaleX: config.shieldSize / 100,
+          scaleY: config.shieldSize / 100,
+          selectable: false,
+          evented: false,
+        });
+        canvas.add(img);
+      } catch (error) {
+        console.error('Error loading shield image on front:', error);
+      }
+    }
+
+    canvas.renderAll();
   };
 
-  const createBackJersey = (canvas: FabricCanvas) => {
+  const createBackJersey = async (canvas: FabricCanvas) => {
     // Main torso body
     const torso = createJerseyPart(70, 100, 260, 350, config.torsoColor, 'torso', selectedPart === 'torso', canvas);
     
@@ -249,6 +269,26 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
       playerNumber, 
       playerName
     );
+
+    // Add shield on back if available (positioned differently for back view)
+    if (config.shieldUrl) {
+      try {
+        const img = await FabricImage.fromURL(config.shieldUrl);
+        img.set({
+          left: config.shieldPosition.x,
+          top: config.shieldPosition.y + 50, // Slightly lower position for back view
+          scaleX: config.shieldSize / 100,
+          scaleY: config.shieldSize / 100,
+          selectable: false,
+          evented: false,
+        });
+        canvas.add(img);
+      } catch (error) {
+        console.error('Error loading shield image on back:', error);
+      }
+    }
+
+    canvas.renderAll();
   };
 
   useEffect(() => {
@@ -271,9 +311,6 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
 
     createFrontJersey(frontCanvas);
     createBackJersey(backCanvas);
-
-    frontCanvas.renderAll();
-    backCanvas.renderAll();
 
     return () => {
       frontCanvas.dispose();
