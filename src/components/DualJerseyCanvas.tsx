@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from 'react';
 import { Canvas as FabricCanvas, Rect, Text, FabricImage } from 'fabric';
 import { JerseyConfig, JerseyPart } from './JerseyConfigurator';
@@ -45,6 +44,40 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
     });
     
     return rect;
+  };
+
+  const calculateShieldScale = (imageWidth: number, imageHeight: number, maxSize: number, canvasWidth: number, canvasHeight: number) => {
+    // Calculate the maximum allowed dimensions based on canvas size
+    const maxWidth = canvasWidth * 0.25; // Max 25% of canvas width
+    const maxHeight = canvasHeight * 0.2; // Max 20% of canvas height
+    
+    // Calculate scale based on the user's size preference
+    const userScale = maxSize / 100;
+    
+    // Calculate what the actual dimensions would be with user's scale
+    const scaledWidth = imageWidth * userScale;
+    const scaledHeight = imageHeight * userScale;
+    
+    // If the scaled dimensions exceed our maximum allowed dimensions, adjust the scale
+    let finalScale = userScale;
+    
+    if (scaledWidth > maxWidth) {
+      finalScale = Math.min(finalScale, maxWidth / imageWidth);
+    }
+    
+    if (scaledHeight > maxHeight) {
+      finalScale = Math.min(finalScale, maxHeight / imageHeight);
+    }
+    
+    return finalScale;
+  };
+
+  const constrainShieldPosition = (x: number, y: number, shieldWidth: number, shieldHeight: number, canvasWidth: number, canvasHeight: number) => {
+    // Ensure shield doesn't go outside canvas boundaries
+    const constrainedX = Math.max(0, Math.min(x, canvasWidth - shieldWidth));
+    const constrainedY = Math.max(0, Math.min(y, canvasHeight - shieldHeight));
+    
+    return { x: constrainedX, y: constrainedY };
   };
 
   const createFrontJersey = async (canvas: FabricCanvas) => {
@@ -166,11 +199,35 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
     if (config.shieldUrl) {
       try {
         const img = await FabricImage.fromURL(config.shieldUrl);
+        
+        // Calculate appropriate scale to fit canvas
+        const scale = calculateShieldScale(
+          img.width || 100,
+          img.height || 100,
+          config.shieldSize,
+          canvas.width || 400,
+          canvas.height || 500
+        );
+        
+        // Calculate actual shield dimensions after scaling
+        const shieldWidth = (img.width || 100) * scale;
+        const shieldHeight = (img.height || 100) * scale;
+        
+        // Constrain position to keep shield within canvas
+        const constrainedPosition = constrainShieldPosition(
+          config.shieldPosition.x,
+          config.shieldPosition.y,
+          shieldWidth,
+          shieldHeight,
+          canvas.width || 400,
+          canvas.height || 500
+        );
+        
         img.set({
-          left: config.shieldPosition.x,
-          top: config.shieldPosition.y,
-          scaleX: config.shieldSize / 100,
-          scaleY: config.shieldSize / 100,
+          left: constrainedPosition.x,
+          top: constrainedPosition.y,
+          scaleX: scale,
+          scaleY: scale,
           selectable: false,
           evented: false,
         });
@@ -274,11 +331,35 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
     if (config.shieldUrl) {
       try {
         const img = await FabricImage.fromURL(config.shieldUrl);
+        
+        // Calculate appropriate scale to fit canvas
+        const scale = calculateShieldScale(
+          img.width || 100,
+          img.height || 100,
+          config.shieldSize,
+          canvas.width || 400,
+          canvas.height || 500
+        );
+        
+        // Calculate actual shield dimensions after scaling
+        const shieldWidth = (img.width || 100) * scale;
+        const shieldHeight = (img.height || 100) * scale;
+        
+        // Constrain position to keep shield within canvas (with offset for back view)
+        const constrainedPosition = constrainShieldPosition(
+          config.shieldPosition.x,
+          config.shieldPosition.y + 50, // Slightly lower position for back view
+          shieldWidth,
+          shieldHeight,
+          canvas.width || 400,
+          canvas.height || 500
+        );
+        
         img.set({
-          left: config.shieldPosition.x,
-          top: config.shieldPosition.y + 50, // Slightly lower position for back view
-          scaleX: config.shieldSize / 100,
-          scaleY: config.shieldSize / 100,
+          left: constrainedPosition.x,
+          top: constrainedPosition.y,
+          scaleX: scale,
+          scaleY: scale,
           selectable: false,
           evented: false,
         });
