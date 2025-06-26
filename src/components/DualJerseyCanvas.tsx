@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect } from 'react';
 import { Canvas as FabricCanvas, Rect, Text, FabricImage } from 'fabric';
 import { JerseyConfig, JerseyPart } from './JerseyConfigurator';
@@ -44,20 +45,6 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
     });
     
     return rect;
-  };
-
-  const calculateShieldScale = (imageWidth: number, imageHeight: number, userSize: number) => {
-    // Convert user size (30-120) to a scale factor
-    // User size of 60 should be roughly normal size, so we use it as baseline
-    return userSize / 60;
-  };
-
-  const constrainShieldPosition = (x: number, y: number, shieldWidth: number, shieldHeight: number, canvasWidth: number, canvasHeight: number) => {
-    // Ensure shield doesn't go outside canvas boundaries
-    const constrainedX = Math.max(0, Math.min(x, canvasWidth - shieldWidth));
-    const constrainedY = Math.max(0, Math.min(y, canvasHeight - shieldHeight));
-    
-    return { x: constrainedX, y: constrainedY };
   };
 
   const createFrontJersey = async (canvas: FabricCanvas) => {
@@ -179,33 +166,11 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
     if (config.shieldUrl) {
       try {
         const img = await FabricImage.fromURL(config.shieldUrl);
-        
-        // Calculate scale based on user's size preference
-        const scale = calculateShieldScale(
-          img.width || 100,
-          img.height || 100,
-          config.shieldSize
-        );
-        
-        // Calculate actual shield dimensions after scaling
-        const shieldWidth = (img.width || 100) * scale;
-        const shieldHeight = (img.height || 100) * scale;
-        
-        // Constrain position to keep shield within canvas
-        const constrainedPosition = constrainShieldPosition(
-          config.shieldPosition.x,
-          config.shieldPosition.y,
-          shieldWidth,
-          shieldHeight,
-          canvas.width || 400,
-          canvas.height || 500
-        );
-        
         img.set({
-          left: constrainedPosition.x,
-          top: constrainedPosition.y,
-          scaleX: scale,
-          scaleY: scale,
+          left: config.shieldPosition.x,
+          top: config.shieldPosition.y,
+          scaleX: config.shieldSize / 100,
+          scaleY: config.shieldSize / 100,
           selectable: false,
           evented: false,
         });
@@ -309,33 +274,11 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
     if (config.shieldUrl) {
       try {
         const img = await FabricImage.fromURL(config.shieldUrl);
-        
-        // Calculate scale based on user's size preference
-        const scale = calculateShieldScale(
-          img.width || 100,
-          img.height || 100,
-          config.shieldSize
-        );
-        
-        // Calculate actual shield dimensions after scaling
-        const shieldWidth = (img.width || 100) * scale;
-        const shieldHeight = (img.height || 100) * scale;
-        
-        // Constrain position to keep shield within canvas (with offset for back view)
-        const constrainedPosition = constrainShieldPosition(
-          config.shieldPosition.x,
-          config.shieldPosition.y + 50, // Slightly lower position for back view
-          shieldWidth,
-          shieldHeight,
-          canvas.width || 400,
-          canvas.height || 500
-        );
-        
         img.set({
-          left: constrainedPosition.x,
-          top: constrainedPosition.y,
-          scaleX: scale,
-          scaleY: scale,
+          left: config.shieldPosition.x,
+          top: config.shieldPosition.y + 50, // Slightly lower position for back view
+          scaleX: config.shieldSize / 100,
+          scaleY: config.shieldSize / 100,
           selectable: false,
           evented: false,
         });
