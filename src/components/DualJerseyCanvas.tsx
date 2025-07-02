@@ -65,34 +65,7 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
     // Collar/Neck
     const collar = createJerseyPart(150, 80, 100, 40, config.neckColor, 'neck', selectedPart === 'neck', canvas);
 
-    // Team name
-    const teamName = new Text(config.teamName, {
-      left: 200,
-      top: 150,
-      fontSize: config.fontSize - 4,
-      fontFamily: config.font,
-      fill: config.secondaryColor.includes('gradient') ? '#ffffff' : config.secondaryColor,
-      textAlign: 'center',
-      originX: 'center',
-      fontWeight: 'bold',
-      selectable: false,
-      evented: false,
-    });
-
-    if (config.secondaryColor.includes('gradient')) {
-      teamName.set({
-        shadow: {
-          color: 'rgba(0,0,0,0.4)',
-          blur: 2,
-          offsetX: 1,
-          offsetY: 1
-        },
-        stroke: '#000000',
-        strokeWidth: 1
-      });
-    }
-
-    // Player number (large)
+    // Player number (large) - no team name on front
     const playerNumber = new Text(config.playerNumber, {
       left: 200,
       top: 220,
@@ -156,7 +129,6 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
       leftSleeveTrim,
       rightSleeveTrim,
       collar, 
-      teamName, 
       playerNumber, 
       playerName
     );
@@ -166,8 +138,8 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
       try {
         const img = await FabricImage.fromURL(config.shieldUrl);
         
-        // Calculate normalized scale - clamp to maximum of 15 pixels
-        const maxSize = 15;
+        // Calculate normalized scale - clamp to maximum of 50 pixels
+        const maxSize = 50;
         const originalWidth = img.width || 100;
         const originalHeight = img.height || 100;
         const maxDimension = Math.max(originalWidth, originalHeight);
@@ -212,6 +184,33 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
     
     // Collar/Neck
     const collar = createJerseyPart(150, 80, 100, 40, config.neckColor, 'neck', selectedPart === 'neck', canvas);
+
+    // Team name - only on back
+    const teamName = new Text(config.teamName, {
+      left: 200,
+      top: 150,
+      fontSize: config.fontSize - 4,
+      fontFamily: config.font,
+      fill: config.secondaryColor.includes('gradient') ? '#ffffff' : config.secondaryColor,
+      textAlign: 'center',
+      originX: 'center',
+      fontWeight: 'bold',
+      selectable: false,
+      evented: false,
+    });
+
+    if (config.secondaryColor.includes('gradient')) {
+      teamName.set({
+        shadow: {
+          color: 'rgba(0,0,0,0.4)',
+          blur: 2,
+          offsetX: 1,
+          offsetY: 1
+        },
+        stroke: '#000000',
+        strokeWidth: 1
+      });
+    }
 
     // Player number (large) - centered on back
     const playerNumber = new Text(config.playerNumber, {
@@ -277,6 +276,7 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
       leftSleeveTrim,
       rightSleeveTrim,
       collar, 
+      teamName, 
       playerNumber, 
       playerName
     );
@@ -286,8 +286,8 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
       try {
         const img = await FabricImage.fromURL(config.shieldUrl);
         
-        // Calculate normalized scale - clamp to maximum of 15 pixels
-        const maxSize = 15;
+        // Calculate normalized scale - clamp to maximum of 50 pixels
+        const maxSize = 50;
         const originalWidth = img.width || 100;
         const originalHeight = img.height || 100;
         const maxDimension = Math.max(originalWidth, originalHeight);
