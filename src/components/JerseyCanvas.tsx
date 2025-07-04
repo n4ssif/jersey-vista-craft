@@ -73,10 +73,10 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config, onPartClick,
       });
       rightTorsoTrim.set('jerseyPart', 'torsoTrim');
 
-      // Main sleeves
+      // Main sleeves - aligned with torso top
       const leftSleeve = new Rect({
         left: 20,
-        top: 120,
+        top: 100,
         width: 50,
         height: 120,
         fill: config.sleeveColor,
@@ -90,7 +90,7 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config, onPartClick,
 
       const rightSleeve = new Rect({
         left: 330,
-        top: 120,
+        top: 100,
         width: 50,
         height: 120,
         fill: config.sleeveColor,
@@ -102,10 +102,10 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config, onPartClick,
       });
       rightSleeve.set('jerseyPart', 'sleeve');
 
-      // Sleeve end trims
+      // Sleeve end trims - adjusted position
       const leftSleeveTrim = new Rect({
         left: 20,
-        top: 220,
+        top: 200,
         width: 50,
         height: 20,
         fill: config.sleeveTrimColor,
@@ -119,7 +119,7 @@ export const JerseyCanvas: React.FC<JerseyCanvasProps> = ({ config, onPartClick,
 
       const rightSleeveTrim = new Rect({
         left: 330,
-        top: 220,
+        top: 200,
         width: 50,
         height: 20,
         fill: config.sleeveTrimColor,

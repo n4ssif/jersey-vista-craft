@@ -54,13 +54,13 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
     const leftTorsoTrim = createJerseyPart(50, 100, 20, 350, config.torsoTrimColor, 'torsoTrim', selectedPart === 'torsoTrim', canvas);
     const rightTorsoTrim = createJerseyPart(330, 100, 20, 350, config.torsoTrimColor, 'torsoTrim', selectedPart === 'torsoTrim', canvas);
     
-    // Main sleeves
-    const leftSleeve = createJerseyPart(20, 120, 50, 120, config.sleeveColor, 'sleeve', selectedPart === 'sleeve', canvas);
-    const rightSleeve = createJerseyPart(330, 120, 50, 120, config.sleeveColor, 'sleeve', selectedPart === 'sleeve', canvas);
+    // Main sleeves - moved higher to align with torso top
+    const leftSleeve = createJerseyPart(20, 100, 50, 120, config.sleeveColor, 'sleeve', selectedPart === 'sleeve', canvas);
+    const rightSleeve = createJerseyPart(330, 100, 50, 120, config.sleeveColor, 'sleeve', selectedPart === 'sleeve', canvas);
     
-    // Sleeve end trims
-    const leftSleeveTrim = createJerseyPart(20, 220, 50, 20, config.sleeveTrimColor, 'sleeveTrim', selectedPart === 'sleeveTrim', canvas);
-    const rightSleeveTrim = createJerseyPart(330, 220, 50, 20, config.sleeveTrimColor, 'sleeveTrim', selectedPart === 'sleeveTrim', canvas);
+    // Sleeve end trims - adjusted position to match new sleeve position
+    const leftSleeveTrim = createJerseyPart(20, 200, 50, 20, config.sleeveTrimColor, 'sleeveTrim', selectedPart === 'sleeveTrim', canvas);
+    const rightSleeveTrim = createJerseyPart(330, 200, 50, 20, config.sleeveTrimColor, 'sleeveTrim', selectedPart === 'sleeveTrim', canvas);
     
     // Collar/Neck
     const collar = createJerseyPart(150, 80, 100, 40, config.neckColor, 'neck', selectedPart === 'neck', canvas);
@@ -175,13 +175,13 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
     const leftTorsoTrim = createJerseyPart(50, 100, 20, 350, config.torsoTrimColor, 'torsoTrim', selectedPart === 'torsoTrim', canvas);
     const rightTorsoTrim = createJerseyPart(330, 100, 20, 350, config.torsoTrimColor, 'torsoTrim', selectedPart === 'torsoTrim', canvas);
     
-    // Main sleeves (reversed positions for back view)
-    const leftSleeve = createJerseyPart(330, 120, 50, 120, config.sleeveColor, 'sleeve', selectedPart === 'sleeve', canvas);
-    const rightSleeve = createJerseyPart(20, 120, 50, 120, config.sleeveColor, 'sleeve', selectedPart === 'sleeve', canvas);
+    // Main sleeves (reversed positions for back view) - aligned with torso top
+    const leftSleeve = createJerseyPart(330, 100, 50, 120, config.sleeveColor, 'sleeve', selectedPart === 'sleeve', canvas);
+    const rightSleeve = createJerseyPart(20, 100, 50, 120, config.sleeveColor, 'sleeve', selectedPart === 'sleeve', canvas);
     
-    // Sleeve end trims (reversed positions for back view)
-    const leftSleeveTrim = createJerseyPart(330, 220, 50, 20, config.sleeveTrimColor, 'sleeveTrim', selectedPart === 'sleeveTrim', canvas);
-    const rightSleeveTrim = createJerseyPart(20, 220, 50, 20, config.sleeveTrimColor, 'sleeveTrim', selectedPart === 'sleeveTrim', canvas);
+    // Sleeve end trims (reversed positions for back view) - adjusted position
+    const leftSleeveTrim = createJerseyPart(330, 200, 50, 20, config.sleeveTrimColor, 'sleeveTrim', selectedPart === 'sleeveTrim', canvas);
+    const rightSleeveTrim = createJerseyPart(20, 200, 50, 20, config.sleeveTrimColor, 'sleeveTrim', selectedPart === 'sleeveTrim', canvas);
     
     // Collar/Neck
     const collar = createJerseyPart(150, 80, 100, 40, config.neckColor, 'neck', selectedPart === 'neck', canvas);
