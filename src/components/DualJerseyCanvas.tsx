@@ -120,15 +120,16 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
     }
 
     canvas.clear();
+    // Add elements in order: torso, torso trim, then sleeves on top
     canvas.add(
       torso, 
       leftTorsoTrim, 
       rightTorsoTrim,
+      collar,
       leftSleeve, 
       rightSleeve, 
       leftSleeveTrim,
       rightSleeveTrim,
-      collar, 
       playerNumber, 
       playerName
     );
@@ -267,15 +268,16 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
     }
 
     canvas.clear();
+    // Add elements in order: torso, torso trim, then sleeves on top
     canvas.add(
       torso, 
       leftTorsoTrim, 
       rightTorsoTrim,
+      collar, 
       leftSleeve, 
       rightSleeve, 
       leftSleeveTrim,
       rightSleeveTrim,
-      collar, 
       teamName, 
       playerNumber, 
       playerName
