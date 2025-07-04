@@ -33,8 +33,8 @@ export const DualJerseyCanvas: React.FC<DualJerseyCanvasProps> = ({ config, onPa
       selectable: false,
       evented: true,
       hoverCursor: 'pointer',
-      stroke: isSelected ? '#3b82f6' : 'transparent',
-      strokeWidth: isSelected ? 3 : 0,
+      stroke: isSelected ? '#3b82f6' : '#000000',
+      strokeWidth: isSelected ? 3 : 1,
     });
     rect.set('jerseyPart', part);
     
